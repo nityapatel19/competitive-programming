@@ -1,6 +1,7 @@
 class Solution {
 public:
-    string smallestEquivalentString(string s1, string s2, string baseStr) {
+    // Slow and inefficient!
+    /*string smallestEquivalentString(string s1, string s2, string baseStr) {
         vector<set<char>> sets;
         set<char> temp = {s1[0], s2[0]};
         sets.push_back(temp);
@@ -59,6 +60,35 @@ public:
             {
                 answer += c;
             }
+        }
+        return answer;
+    }*/
+
+    // Better solution!
+    char find_least (char x, map<char,char>& mp)
+    {
+        if (mp.find(x) == mp.end()) return x;
+        mp[x] = find_least(mp[x], mp);
+        return mp[x];
+    }
+    void Union(char x, char y, map<char,char>& mp)
+    {
+        x = find_least(x, mp);
+        y = find_least(y, mp);
+        if (x != y)
+            mp[max(x,y)] = min(x,y);
+    }
+    string smallestEquivalentString(string s1, string s2, string baseStr) {
+        map<char,char> mp;
+        for (int i = 0; i < s1.length(); i++)
+        {
+            Union(s1[i], s2[i], mp);
+        }
+
+        string answer = "";
+        for (char c: baseStr)
+        {
+            answer += find_least(c, mp);
         }
         return answer;
     }
