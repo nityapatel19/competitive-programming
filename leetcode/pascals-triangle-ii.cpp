@@ -22,7 +22,6 @@ public:
 
     vector<int> getRow(int rowIndex) {
         vector<int> ans(rowIndex+1, 1);
-        int num = rowIndex, den = 1;
         for (int i = 1; i < rowIndex; i++)
         {
             ans[i] = (long)ans[i-1] * (long)(rowIndex+1-i) / (long)(i);
