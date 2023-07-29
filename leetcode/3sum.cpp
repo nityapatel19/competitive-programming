@@ -1,64 +1,48 @@
 class Solution {
 public:
+    // Slow!
     /* vector<vector<int>> threeSum(vector<int>& nums) {
-        sort(nums.begin(), nums.end());
-        set<vector<int>> st;
+        set<vector<int>> ans;
         int n = nums.size();
-        
-        for (int i = 0; i < n; ++i)
+        for (int i = 0; i < n; i++)
         {
-            if (i > 0 && nums[i] == nums[i-1]) continue;
-            int left = i+1, right = n-1;
-            while (left < right)
+            set<int> st;
+            for (int j = i+1; j < n; j++)
             {
-                int sum = nums[i] + nums[left] + nums[right];
-                if (sum == 0)
+                int target = 0-nums[i]-nums[j];
+                if (st.find(target) != st.end())
                 {
-                    st.insert({nums[i], nums[left], nums[right]});
-                    left++; right--;
+                    vector<int> temp({nums[i], target, nums[j]});
+                    sort(temp.begin(), temp.end());
+                    ans.insert(temp);
                 }
-                else if (sum > 0)
-                    right--;
-                else
-                    left++;
+                st.insert(nums[j]);
             }
         }
-
-        vector<vector<int>> ans;
-        for (auto x: st)
-        {
-            ans.push_back(x);
-        }
-        return ans;
+        return vector<vector<int>>(ans.begin(), ans.end());
     } */
 
     vector<vector<int>> threeSum(vector<int>& nums) {
-        sort(nums.begin(), nums.end());
-        vector<vector<int>> ans;
         int n = nums.size();
-        
-        for (int i = 0; i < n; ++i)
+        vector<vector<int>> ans;
+        sort(nums.begin(), nums.end());
+
+        for (int i = 0; i < n; i++)
         {
             if (i > 0 && nums[i] == nums[i-1]) continue;
-            int left = i+1, right = n-1;
-            while (left < right)
+            int j = i+1, k = n-1;
+            while (j < k)
             {
-                int sum = nums[i] + nums[left] + nums[right];
-                if (sum == 0)
-                {
-                    ans.push_back({nums[i], nums[left], nums[right]});
-                    left++; right--;
-
-                    while (left < right && nums[left] == nums[left-1]) left++;
-                    while (left < right && nums[right] == nums[right+1]) right--;
-                }
-                else if (sum > 0)
-                    right--;
+                if (nums[i] + nums[j] + nums[k] > 0) k--;
+                else if (nums[i] + nums[j] + nums[k] < 0) j++;
                 else
-                    left++;
+                {
+                    ans.push_back({nums[i], nums[j++], nums[k--]});
+                    while (j < k && nums[j] == nums[j-1]) j++;
+                    while (j < k && nums[k] == nums[k+1]) k--;
+                }
             }
         }
-        
         return ans;
     }
 };
